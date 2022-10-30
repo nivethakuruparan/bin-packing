@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from os import path
 from random import shuffle, seed
+# from tarfile import _Bz2ReadableFileobj
 from . import WeightSet, WeightStream
 
 
@@ -45,3 +46,27 @@ class BinppReader(DatasetReader):
             for _ in range(nb_objects):
                 weights.append(int(reader.readline()))
             return (capacity, weights)
+
+class JburReader(DatasetReader):
+    '''Read problem description according to the jburkardt format'''
+    def __init__(self, filename1:str, filename2: str) -> None:
+        if not path.exists(filename1):
+            raise ValueError(f'Unknown file [{filename1}]')
+        if not path.exists(filename2):
+            raise ValueError(f'Unknown file [{filename2}]')
+        self._filename1 = filename1
+        self._filename2 = filename2
+
+    def _load_data_from_disk(self) -> WeightSet:
+        with open(self._filename1, 'r') as reader:
+            capacity: int = int(reader.readline())
+        
+        with open(self._filename2, 'r') as reader:
+            weights = []
+            while True:
+                line = reader.readline()
+                if not line:
+                    break
+                weights.append(int(line))
+            
+        return (capacity, weights)
