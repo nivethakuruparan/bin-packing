@@ -19,19 +19,19 @@ class FirstFitDec(Offline):
 
     def _process(self, capacity: int, weights: WeightSet) -> Solution:
         weights = sorted(weights, reverse=True)
-        delegation = Ff_online 
+        delegation = Ff_online() 
         return delegation((capacity, weights))
 
 class BestFitDec(Offline):
 
     def _process(self, capacity:int, weights: WeightSet) -> Solution:
         weights = sorted(weights, reverse = True)
-        delegation = Bf_online 
+        delegation = Bf_online()
         return delegation((capacity, weights))
 
 class WorstFitDec(Offline):
 
     def _process(self, capacity: int, weights: WeightSet) -> Solution:
         weights = sorted(weights, reverse = True)
-        delegation = Wf_online
+        delegation = Wf_online()
         return delegation((capacity, weights))

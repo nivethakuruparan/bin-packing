@@ -1,7 +1,8 @@
 import pyperf
 from os import listdir
 from os.path import isfile, join, basename
-from macpacking.algorithms.online import NextFit
+from macpacking.algorithms.online import NextFit, FirstFit, BestFit, WorstFit, OneFit
+from macpacking.algorithms.offline import NextFit, FirstFitDec, BestFitDec, WorstFitDec
 from macpacking.reader import BinppReader
 
 
