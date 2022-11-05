@@ -17,3 +17,12 @@ class NextFit(Online):
                 solution.append([w])
                 remaining = capacity - w
         return solution
+
+
+class OneFit(Online):
+
+    def _process(self, capacity: int, stream: WeightStream) -> Solution:
+        solution = []
+        for w in stream:
+            solution.append([w])
+        return solution
