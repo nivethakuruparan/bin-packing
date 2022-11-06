@@ -1,19 +1,19 @@
 import pyperf
 from typing import TypedDict
 from os.path import basename
-from macpacking.model import BinPacker
+from macpacking.model import Partition
 from macpacking.reader import BinppReader
 
 
 class SpaceElement(TypedDict):
     name: str
     data: tuple
-    binpacker: BinPacker
+    binpacker: Partition
 
 
 class BenchmarkSpace():
     def __init__(self, strategies, num_weights, capacity, alg_type) -> None:
-        self.__strategies: list[BinPacker] = strategies
+        self.__strategies: list[Partition] = strategies
         self.__num_weights: list[int] = num_weights
         self.__capacity: list[int] = capacity
         self.__algorithm_type: str = alg_type
@@ -61,7 +61,7 @@ class BenchmarkSpace():
         return '_datasets/binpp/N' + w + 'C' + c + 'W1/N' + w + \
             'C' + c + 'W1_A.BPP.txt'
 
-    def __build_name(self, case: str, strategy: BinPacker, num_weights: int, capacity: int) -> str:
+    def __build_name(self, case: str, strategy: Partition, num_weights: int, capacity: int) -> str:
         return f'{basename(case)}-{strategy.__class__.__name__}-{num_weights}-{capacity}'
 
 

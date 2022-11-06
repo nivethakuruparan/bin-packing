@@ -20,8 +20,14 @@ class DatasetReader(ABC):
         def iterator():  # Wrapping the contents into an iterator
             for w in weights:
                 yield w  # yields the current value and moves to the next one
-
         return (capacity, iterator())
+
+    def partition(self) -> WeightSet:
+        '''Return a WeightSet to support an offline algorithm'''
+        (num_bins, weights) = self._load_data_from_disk()
+        seed(42)          # always produce the same shuffled result
+        shuffle(weights)  # side effect shuffling
+        return (num_bins, weights)
 
     @abstractmethod
     def _load_data_from_disk(self) -> WeightSet:
@@ -68,3 +74,22 @@ class JburkardtReader(DatasetReader):
                 if line.strip():
                     weights.append(int(line))
         return (capacity, weights)
+
+
+class BinppPartitionReader(DatasetReader):
+    '''Read problem description according to the BinPP format'''
+
+    def __init__(self, filename: str, num_bins: int) -> None:
+        if not path.exists(filename):
+            raise ValueError(f'Unkown file [{filename}]')
+        self.__filename = filename
+        self.__num_bins = num_bins
+
+    def _load_data_from_disk(self) -> WeightSet:
+        with open(self.__filename, 'r') as reader:
+            nb_objects: int = int(reader.readline())
+            reader.readline()
+            weights = []
+            for _ in range(nb_objects):
+                weights.append(int(reader.readline()))
+            return (self.__num_bins, weights)
