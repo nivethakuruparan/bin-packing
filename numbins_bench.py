@@ -1,9 +1,7 @@
 from os import listdir
 from os.path import isfile, join, basename
-from macpacking.algorithms.online import NextFit, FirstFit, BestFit, \
-    WorstFit, OneFit
-from macpacking.algorithms.offline import NextFit as NextFitDesc, FirstFit \
-    as FirstFitDesc, BestFit as BestFitDesc, WorstFit as WorstFitDesc
+from macpacking.algorithms.online import NextFit, FirstFit, BestFit, WorstFit, OneFit
+from macpacking.algorithms.offline import NextFit as NextFitDesc, FirstFit as FirstFitDesc, BestFit as BestFitDesc, WorstFit as WorstFitDesc
 from macpacking.reader import BinppReader
 import matplotlib.pyplot as matplot
 
@@ -37,8 +35,10 @@ def run_bench(cases: list[str], algs: list, alg_type: str):
         print("Benchmarking for Offline Algorithms:")
 
     alg_names = []
-    for alg in algs:
-        alg_names.append(alg.__name__)
+    if alg_type == "Online":
+        alg_names = ['NextFit','FirstFit','BestFit','WorstFit','OneFit']
+    elif alg_type == "Offline":
+        alg_names = ['NextFitOffline','FirstFitDecreasing','BestFitDecreasing','WorstFitDecreasing']
 
     for case in cases:
         result = []
