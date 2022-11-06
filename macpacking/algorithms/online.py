@@ -22,82 +22,65 @@ class FirstFit(Online):
 
     def _process(self, capacity: int, stream: WeightStream) -> Solution:
         solution = [[]]
-        bin_index = 0
-        n = 0
+        num_bins = 1
         for w in stream:
-            n += 1
-        remaining = [0] * n
-        for w in stream:
-            i = 0
-            while (i < bin_index):
-                if (remaining[i] >= w):
-                    solution[i].append(w)
-                    remaining[i] = remaining[i] - w
+            bin_index = 0
+            while bin_index < num_bins:
+                if sum(solution[bin_index]) + w <= capacity:
+                    solution[bin_index].append(w)
                     break
-                i += 1
-            if(i == bin_index):
-                remaining[bin_index] = capacity - w
-                solution.append([w])
                 bin_index += 1
-        return solution 
+            else:
+                solution.append([w])
+                num_bins += 1
+        return solution
 
 class BestFit(Online):
 
-    def _process(self, capacity:int, stream: WeightStream) -> Solution:
+    def _process(self, capacity: int, stream: WeightStream) -> Solution:
         solution = [[]]
-        bin_index = 0
-        n = 0
+        num_bins = 1
         for w in stream:
-            n += 1
-        remaining = [0] * n
-        for w in stream:
-            i = 0
-            min = capacity + 1
-            best_index = 0
-            for i in range(bin_index):
-                if(remaining[i] >= w and remaining[i] - w < min):
-                    best_index = i
-                    min = remaining[i] - w
-            if (min == capacity+1):
-                remaining[bin_index] = capacity - w
-                solution.append([w])
+            bin_index = 0
+            best_bin_info = (-1, -1)  # (bin index, min space left)
+            while bin_index < num_bins:
+                temp_sum = sum(solution[bin_index]) + w
+                if temp_sum <= capacity and temp_sum > best_bin_info[1]:
+                    best_bin_info = (bin_index, temp_sum)
                 bin_index += 1
+            if best_bin_info[0] > -1:
+                solution[best_bin_info[0]].append(w)
             else:
-                remaining[best_index] -= w
-                solution[best_index].append(w)
-        return solution 
+                solution.append([w])
+                num_bins += 1
+        return solution
+
 
 class WorstFit(Online):
-
-    def _process(self, capacity:int, stream: WeightStream) -> Solution:
+    
+    def _process(self, capacity: int, stream: WeightStream) -> Solution:
         solution = [[]]
-        bin_index = 0
-        n = 0 
+        num_bins = 1
         for w in stream:
-            n += 1
-        remaining = [0] * n
-        for w in stream:
-            max_space = -1
-            worst_index = 0
-            for i in range(bin_index):
-                if(remaining[i] >= w and remaining[i] - w > max_space):
-                    worst_index = i
-                    max_space = remaining[i] - w
-            if (max_space == -1):
-                remaining[bin_index] = capacity - w
-                solution.append([w])
+            bin_index = 0
+            worst_bin_info = (-1, -1)  # (bin index, max space left)
+            while bin_index < num_bins:
+                temp_sum = sum(solution[bin_index]) + w
+                max_space = capacity - temp_sum
+                if temp_sum <= capacity and max_space > worst_bin_info[1]:
+                    worst_bin_info = (bin_index, max_space)
                 bin_index += 1
+            if worst_bin_info[0] > -1:
+                solution[worst_bin_info[0]].append(w)
             else:
-                remaining[worst_index] -= w
-                solution[worst_index].append(w)
+                solution.append([w])
+                num_bins += 1
         return solution
 
 class OneFit(Online):
 
     def _process(self, capacity:int, stream: WeightStream) -> Solution:
-        bin_index = 0
         solution = []
-        remaining = capacity
         for w in stream:
             solution.append([w])
         return solution 

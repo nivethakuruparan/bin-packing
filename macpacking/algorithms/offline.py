@@ -15,21 +15,21 @@ class NextFit(Offline):
         delegation = Nf_online()
         return delegation((capacity, weights))
 
-class FirstFitDec(Offline):
+class FirstFit(Offline):
 
     def _process(self, capacity: int, weights: WeightSet) -> Solution:
         weights = sorted(weights, reverse=True)
         delegation = Ff_online() 
         return delegation((capacity, weights))
 
-class BestFitDec(Offline):
+class BestFit(Offline):
 
     def _process(self, capacity:int, weights: WeightSet) -> Solution:
         weights = sorted(weights, reverse = True)
         delegation = Bf_online()
         return delegation((capacity, weights))
 
-class WorstFitDec(Offline):
+class WorstFit(Offline):
 
     def _process(self, capacity: int, weights: WeightSet) -> Solution:
         weights = sorted(weights, reverse = True)
