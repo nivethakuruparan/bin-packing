@@ -38,10 +38,7 @@ def run_bench(cases: list[str], algs: list, alg_type: str):
 
     alg_names = []
     for alg in algs:
-        if alg_type == "Online":
-            alg_names.append(str(alg)[37:-2])
-        elif alg_type == "Offline":
-            alg_names.append(str(alg)[38:-2])
+        alg_names.append(alg.__name__)
 
     for case in cases:
         result = []
