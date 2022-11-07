@@ -36,9 +36,9 @@ def run_bench(cases: list[str], algs: list, alg_type: str):
 
     alg_names = []
     if alg_type == "Online":
-        alg_names = ['NextFit','FirstFit','BestFit','WorstFit','OneFit']
+        alg_names = ['NextFit', 'FirstFit', 'BestFit', 'WorstFit', 'OneFit']
     elif alg_type == "Offline":
-        alg_names = ['NextFitOffline','FirstFitDecreasing','BestFitDecreasing','WorstFitDecreasing']
+        alg_names = ['NextFitOffline', 'FirstFitDecreasing', 'BestFitDecreasing', 'WorstFitDecreasing']
 
     for case in cases:
         result = []

@@ -133,17 +133,13 @@ def save_results(path:str,res):
 def plot_moi(moi):
     algs = ['Optimal','NextFit','FirstFit','BestFit','WorstFit','OneFit','NextFitOffline','FirstFitDecreasing','BestFitDecreasing','WorstFitDecreasing','Benchmark']
     for i in moi:
-        sheet = matplot.figure(1,[20,8])
-        sheet.clf()
-        ax = sheet.add_subplot(111)
-        ax.yaxis.grid(True)
-        ax.set_xlim(-1,200)
-        matplot.setp(ax.get_xticklabels(), rotation='vertical', fontsize=8)
-        bar_graph = sheet.add_axes([0,0,1,1])
-        bar_graph.bar(algs,moi[i])
+        sheet = matplot.figure()
+        bar_graph = sheet.add_axes([0, 0, 1, 1])
+        bar_graph.bar(algs, moi[i])
         bar_graph.set_ylabel('Number of Bins More Than Optimal')
         bar_graph.set_xlabel('Algorithm Used')
         bar_graph.set_title(i)
+        sheet.set_size_inches(18, 5)
         matplot.show()
 
 def compute_moi(res):

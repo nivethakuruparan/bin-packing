@@ -3,11 +3,11 @@ from typing import Iterator
 from . import WeightStream, WeightSet, Solution
 
 
-class BinPacker(ABC):
+class Partition(ABC):
     pass
 
 
-class Online(BinPacker):
+class Online(Partition):
 
     def __call__(self, ws: WeightStream):
         capacity, stream = ws
@@ -18,7 +18,7 @@ class Online(BinPacker):
         pass
 
 
-class Offline(BinPacker):
+class Offline(Partition):
 
     def __call__(self, ws: WeightSet):
         capacity, weights = ws
@@ -26,4 +26,15 @@ class Offline(BinPacker):
 
     @abstractmethod
     def _process(self, c: int, weights: list[int]) -> Solution:
+        pass
+
+
+class Partition(Partition):
+
+    def __call__(self, ws: WeightSet):
+        num_bins, weights = ws
+        return self._process(num_bins, weights)
+
+    @abstractmethod
+    def _process(self, num_bins: int, weights: list[int]) -> Solution:
         pass
