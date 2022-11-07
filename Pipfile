@@ -9,8 +9,9 @@ importlib-resources = "~=5.9.0"
 matplotlib = "~=3.5.2"
 pyperf = "~=2.4.0"
 binpacking = "~=1.5.2"
-
-
+coverage = "*"
+pytest = "*"
+flake8 = "*"
 
 [dev-packages]
 flake8 = "~=5.0.4"

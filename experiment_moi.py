@@ -1,48 +1,57 @@
-from macpacking.algorithms.online import NextFit, FirstFit, BestFit, WorstFit, OneFit
-from macpacking.algorithms.offline import NextFit as NextFitDesc, FirstFit as FirstFitDec, BestFit as BestFitDec, WorstFit as WorstFitDec
+from macpacking.algorithms.online import NextFit, \
+    FirstFit, BestFit, WorstFit, OneFit
+from macpacking.algorithms.offline import NextFit \
+    as NextFitDesc, FirstFit as FirstFitDec, BestFit\
+    as BestFitDec, WorstFit as WorstFitDec
 from macpacking.algorithms.baseline import BenMaier
-from macpacking.reader import BinppReader, JburkardtReader
+from macpacking.reader import BinppReader
 from os import listdir
 from os.path import isfile, join, basename
 import matplotlib.pyplot as matplot
-import numpy 
 import csv
 
 CASES = './_datasets/binpp-hard'
 data_path = './_datasets/oracle.csv'
 res_path = 'experiment_res.csv'
 
-def list_case_files(dir:str) -> list[str]:
-    return sorted([f'{dir}/{f}' for f in listdir(dir) if isfile(join(dir,f))])
+
+def list_case_files(dir: str) -> list[str]:
+    return sorted([f'{dir}/{f}' for f in listdir(dir) if isfile(join(dir, f))])
+
 
 def generate_online_alg_list():
     algs = [NextFit, FirstFit, BestFit, WorstFit, OneFit]
     return algs
 
+
 def generate_offline_alg_list():
     algs = [NextFitDesc, FirstFitDec, BestFitDec, WorstFitDec]
-    return algs 
+    return algs
 
-def extract_optimal_data(path:str):
+
+def extract_optimal_data(path: str):
     data = {}
-    with open(path,'r') as file:
+    with open(path, 'r') as file:
         read_ob = csv.reader(file)
         for j in read_ob:
-            if(j[0]=='Problem'):continue
+            if (j[0] == 'Problem'):
+                continue
             i = str(j)
             key = i.split(',')[0]
             key = key[2:7]+'.BPP.txt'
             value = i.split(',')[1]
             data[key] = []
-            data[key].append(['Optimal',int(value[2:4])])
+            data[key].append(['Optimal', int(value[2:4])])
     return data
 
-def execute_algorithm(cases:list[str],algs:list, alg_type:str):
+
+def execute_algorithm(cases: list[str], algs: list, alg_type: str):
     res = {}
     if alg_type == "Online":
-        alg_names = ['NextFit','FirstFit', 'BestFit','WorstFit','OneFit']
+        alg_names = ['NextFit', 'FirstFit', 'BestFit', 'WorstFit', 'OneFit']
     elif alg_type == "Offline":
-        alg_names = ['NextFitOffline','FirstFitDecreasing',  'BestFitDecreasing','WorstFitDecreasing']
+        alg_names = ['NextFitOffline', 'FirstFitDecreasing', \
+        'BestFitDecreasing', 'WorstFitDecreasing']
     elif alg_type == "Benchmark":
         alg_names = ['Benchmark']
     for case in cases:
@@ -56,51 +65,58 @@ def execute_algorithm(cases:list[str],algs:list, alg_type:str):
                 data = BinppReader(case).offline()
             elif alg_type == "Benchmark":
                 data = BinppReader(case).offline()
-            nob = len(j._process(j,data[0],data[1]))
-            res[name].append([alg_names[k],nob])
+            nob = len(j._process(j, data[0], data[1]))
+            res[name].append([alg_names[k], nob])
     return res
 
-def execute_bm_algorithm(cases:list[str], alg):
+
+def execute_bm_algorithm(cases: list[str], alg):
     alg_name = 'Benchmark'
     res = {}
     for case in cases:
         name = basename(case)
         res[name] = []
         data = BinppReader(case).offline()
-        nob = len(alg._process(alg,data[0],data[1]))
-        res[name].append([alg_name,nob])
+        nob = len(alg._process(alg, data[0], data[1]))
+        res[name].append([alg_name, nob])
     return res
 
-def execute_online_algorithm(cases:list[str],algs:list):
+
+def execute_online_algorithm(cases: list[str], algs: list):
     res = {}
-    alg_names = ['NextFit','FirstFit','BestFit','WorstFit','OneFit']
+    alg_names = ['NextFit', 'FirstFit', 'BestFit', 'WorstFit', 'OneFit']
     for case in cases:
         name = basename(case)
         res[name] = []
         for k in range(len(algs)):
             j = algs[k]
             data = BinppReader(case).online()
-            nob = len(j._process(j,data[0],data[1]))
-            res[name].append([alg_names[k],nob])
+            nob = len(j._process(j, data[0], data[1]))
+            res[name].append([alg_names[k], nob])
     return res
 
 
-def execute_offline_algorithm(cases:list[str], algs:list):
+def execute_offline_algorithm(cases: list[str], algs: list):
     res = {}
-    alg_names = ['NextFitOffline','FirstFitDecreasing','BestFitDecreasing','WorstFitDecreasing']
+    alg_names = ['NextFitOffline', 'FirstFitDecreasing', 'BestFitDecreasing', \
+    'WorstFitDecreasing']
     for case in cases:
         name = basename(case)
         res[name] = []
         for k in range(len(algs)):
             j = algs[k]
             data = BinppReader(case).offline()
-            nob = len(j._process(j,data[0],data[1]))
+            nob = len(j._process(j, data[0], data[1]))
             res[name].append([alg_names[k],nob])
     return res
 
-def merge_results(res0,res1,res2,res3):
+
+def merge_results(res0, res1, res2, res3):
     res = {}
-    res['Algorithm'] = ['Optimal','NextFit','FirstFit','BestFit','WorstFit','OneFit','NextFitOffline','FirstFitDecreasing','BestFitDecreasing','WorstFitDecreasing','Benchmark']
+    res['Algorithm'] = ['Optimal', 'NextFit', 'FirstFit', \
+        'BestFit', 'WorstFit', 'OneFit', 'NextFitOffline', \
+            'FirstFitDecreasing', 'BestFitDecreasing', \
+                'WorstFitDecreasing', 'Benchmark']
     keys = res1.keys()
     for k in keys:
         res[k] = []
@@ -114,29 +130,36 @@ def merge_results(res0,res1,res2,res3):
             res[k].append(i[1])
     return res
 
+
 def display_results(res):
     print("Number of bins used is in the following order for each row:")
     print(res["Algorithm"])
     for i in res:
-        if i=="Algorithm":continue
+        if i == "Algorithm":
+            continue
         print(f'Case:{i}')
         print('Number of Bins Used for Each Algorithm:')
         print(res[i])
 
-def save_results(path:str,res):
-    with open(path,'w') as f:
+
+def save_results(path: str,res):
+    with open(path,'w') as f: 
         writer = csv.writer(f)
         writer.writerow((res.keys()))
         for i in res:
             writer.writerow(res[i])
 
+
 def plot_moi(moi):
-    algs = ['Optimal','NextFit','FirstFit','BestFit','WorstFit','OneFit','NextFitOffline','FirstFitDecreasing','BestFitDecreasing','WorstFitDecreasing','Benchmark']
+    algs = ['Optimal', 'NextFit', 'FirstFit', \
+        'BestFit', 'WorstFit', 'OneFit', 'NextFitOffline', \
+            'FirstFitDecreasing', 'BestFitDecreasing', \
+                'WorstFitDecreasing', 'Benchmark']
     for i in moi:
         sheet = matplot.figure()
         bar_graph = sheet.add_axes([0, 0, 1, 1])
         bar_graph.bar(algs, moi[i])
-        for j in range(len(algs)):
+        for j in range(len(algs)): 
             bar_graph.text(j,moi[i][j],moi[i][j])
         bar_graph.set_ylabel('Number of Bins More Than Optimal')
         bar_graph.set_xlabel('Algorithm Used')
@@ -144,10 +167,12 @@ def plot_moi(moi):
         sheet.set_size_inches(18, 5)
         matplot.show()
 
+
 def compute_moi(res):
     moi = {}
     for case in res.keys():
-        if (case == 'Algorithm'):continue
+        if (case == 'Algorithm'):
+            continue
         optimal = res[case][0]
         moi[case] = []
         for i in res[case]:
@@ -155,23 +180,21 @@ def compute_moi(res):
             moi[case].append(margin)
     plot_moi(moi)      
 
+
 def main():
     cases = list_case_files(CASES)
-
     online_algs = generate_online_alg_list()
     offline_algs = generate_offline_alg_list()
     baseline_alg = [BenMaier]
-
     res0 = extract_optimal_data(data_path)
     res1 = execute_algorithm(cases, online_algs, "Online")
     res2 = execute_algorithm(cases, offline_algs, "Offline")
     res3 = execute_algorithm(cases, baseline_alg, "Benchmark")
-    
     res = merge_results(res0,res1,res2,res3)
-
     save_results(res_path,res)
     display_results(res)
     compute_moi(res)
+
 
 if __name__ == "__main__":
     main()
