@@ -136,6 +136,8 @@ def plot_moi(moi):
         sheet = matplot.figure()
         bar_graph = sheet.add_axes([0, 0, 1, 1])
         bar_graph.bar(algs, moi[i])
+        for j in range(len(algs)):
+            bar_graph.text(j,moi[i][j],moi[i][j])
         bar_graph.set_ylabel('Number of Bins More Than Optimal')
         bar_graph.set_xlabel('Algorithm Used')
         bar_graph.set_title(i)

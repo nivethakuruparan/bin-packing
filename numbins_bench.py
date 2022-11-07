@@ -1,7 +1,7 @@
 from os import listdir
 from os.path import isfile, join, basename
-from macpacking.algorithms.online import NextFit, FirstFit, BestFit, WorstFit, OneFit
-from macpacking.algorithms.offline import NextFit as NextFitDesc, FirstFit as FirstFitDesc, BestFit as BestFitDesc, WorstFit as WorstFitDesc
+from macpacking.algorithms.online import NextFit, FirstFit, RefinedFirstFit, BestFit, WorstFit, OneFit
+from macpacking.algorithms.offline import NextFit as NextFitDesc, FirstFit as FirstFitDesc, RefinedFirstFit as RFDesc, BestFit as BestFitDesc, WorstFit as WorstFitDesc
 from macpacking.reader import BinppReader
 import matplotlib.pyplot as matplot
 
@@ -21,11 +21,11 @@ def list_case_files(dir: str) -> list[str]:
 
 
 def generate_online_alg_list():
-    return [NextFit, FirstFit, BestFit, WorstFit, OneFit]
+    return [NextFit, FirstFit, RefinedFirstFit, BestFit, WorstFit, OneFit]
 
 
 def generate_offline_alg_list():
-    return [NextFitDesc, FirstFitDesc, BestFitDesc, WorstFitDesc]
+    return [NextFitDesc, FirstFitDesc, RFDesc, BestFitDesc, WorstFitDesc]
 
 
 def run_bench(cases: list[str], algs: list, alg_type: str):
@@ -36,9 +36,9 @@ def run_bench(cases: list[str], algs: list, alg_type: str):
 
     alg_names = []
     if alg_type == "Online":
-        alg_names = ['NextFit', 'FirstFit', 'BestFit', 'WorstFit', 'OneFit']
+        alg_names = ['NextFit', 'FirstFit', 'RefinedFirstFit', 'BestFit', 'WorstFit', 'OneFit']
     elif alg_type == "Offline":
-        alg_names = ['NextFitOffline', 'FirstFitDecreasing', 'BestFitDecreasing', 'WorstFitDecreasing']
+        alg_names = ['NextFitOffline', 'FirstFitDecreasing', 'RefinedFirstFitDecreasing', 'BestFitDecreasing', 'WorstFitDecreasing']
 
     for case in cases:
         result = []
@@ -48,7 +48,9 @@ def run_bench(cases: list[str], algs: list, alg_type: str):
                 data = BinppReader(case).online()
             elif alg_type == "Offline":
                 data = BinppReader(case).offline()
-            num_bins = len(alg._process(alg, data[0], data[1]))
+            delegation = alg()
+            num_bins = len(delegation((data[0],data[1])))
+            # num_bins = len(alg._process(alg, data[0], data[1]))
             result.append(num_bins)
         plot_results(name, alg_names, result)
 
@@ -62,6 +64,7 @@ def plot_results(case: str, alg_names: list[str], result: list[int]):
     bar_graph.set_ylabel('Number of Bins')
     bar_graph.set_xlabel('Algorithm Name')
     bar_graph.set_title(case)
+    sheet.set_size_inches(18,5)
     matplot.show()
 
 
