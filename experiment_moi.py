@@ -40,9 +40,9 @@ def extract_optimal_data(path:str):
 def execute_algorithm(cases:list[str],algs:list, alg_type:str):
     res = {}
     if alg_type == "Online":
-        alg_names = ['NextFit','FirstFit','BestFit','WorstFit','OneFit']
+        alg_names = ['NextFit','FirstFit', 'BestFit','WorstFit','OneFit']
     elif alg_type == "Offline":
-        alg_names = ['NextFitOffline','FirstFitDecreasing','BestFitDecreasing','WorstFitDecreasing']
+        alg_names = ['NextFitOffline','FirstFitDecreasing',  'BestFitDecreasing','WorstFitDecreasing']
     elif alg_type == "Benchmark":
         alg_names = ['Benchmark']
     for case in cases:
@@ -98,8 +98,6 @@ def execute_offline_algorithm(cases:list[str], algs:list):
             res[name].append([alg_names[k],nob])
     return res
 
-
-
 def merge_results(res0,res1,res2,res3):
     res = {}
     res['Algorithm'] = ['Optimal','NextFit','FirstFit','BestFit','WorstFit','OneFit','NextFitOffline','FirstFitDecreasing','BestFitDecreasing','WorstFitDecreasing','Benchmark']
@@ -116,6 +114,15 @@ def merge_results(res0,res1,res2,res3):
             res[k].append(i[1])
     return res
 
+def display_results(res):
+    print("Number of bins used is in the following order for each row:")
+    print(res["Algorithm"])
+    for i in res:
+        if i=="Algorithm":continue
+        print(f'Case:{i}')
+        print('Number of Bins Used for Each Algorithm:')
+        print(res[i])
+
 def save_results(path:str,res):
     with open(path,'w') as f:
         writer = csv.writer(f)
@@ -126,7 +133,12 @@ def save_results(path:str,res):
 def plot_moi(moi):
     algs = ['Optimal','NextFit','FirstFit','BestFit','WorstFit','OneFit','NextFitOffline','FirstFitDecreasing','BestFitDecreasing','WorstFitDecreasing','Benchmark']
     for i in moi:
-        sheet = matplot.figure()
+        sheet = matplot.figure(1,[20,8])
+        sheet.clf()
+        ax = sheet.add_subplot(111)
+        ax.yaxis.grid(True)
+        ax.set_xlim(-1,200)
+        matplot.setp(ax.get_xticklabels(), rotation='vertical', fontsize=8)
         bar_graph = sheet.add_axes([0,0,1,1])
         bar_graph.bar(algs,moi[i])
         bar_graph.set_ylabel('Number of Bins More Than Optimal')
@@ -160,6 +172,7 @@ def main():
     res = merge_results(res0,res1,res2,res3)
 
     save_results(res_path,res)
+    display_results(res)
     compute_moi(res)
 
 if __name__ == "__main__":
