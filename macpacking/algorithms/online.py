@@ -18,6 +18,7 @@ class NextFit(Online):
                 remaining = capacity - w
         return solution
 
+
 class FirstFit(Online):
 
     def _process(self, capacity: int, stream: WeightStream) -> Solution:
@@ -34,12 +35,12 @@ class FirstFit(Online):
                 solution.append([w])
                 num_bins += 1
         return solution
-    
+
 
 class RefinedFirstFit(Online):
 
-    def _first_fit_helper(self, capacity:int, num_bins:int, w:int, solution: Solution):
-        bin_index = 0 
+    def _first_fit_helper(self, capacity: int, num_bins: int, w: int, solution: Solution):
+        bin_index = 0
         while bin_index < num_bins:
             if sum(solution[bin_index]) + w <= capacity:
                 solution[bin_index].append(w)
@@ -50,8 +51,8 @@ class RefinedFirstFit(Online):
             num_bins += 1
         return solution, num_bins
 
-    def _determine_category(self, w:int, capacity:int, count_b2:int):
-        cap = [0, (1/3*capacity), (2/5*capacity), (1/2*capacity), capacity]
+    def _determine_category(self, w: int, capacity: int, count_b2: int):
+        cap = [0, (1/3 * capacity), (2/5 * capacity), (1/2 * capacity), capacity]
         m = 6
         category = ''
         if (w>cap[3] and w<=cap[4]):
@@ -68,10 +69,10 @@ class RefinedFirstFit(Online):
                 category = 'XS'
         return category, count_b2
 
-    def _process(self, capacity:int, stream:WeightStream) -> Solution:
-        num_bins = {"L":1, "M":1, "S":1, "XS":1} #each of the keys is a bin category, bins are divided among four categories
-        sol = {"L": [[]], "M": [[]], "S": [[]], "XS":[[]]}
-        bi = {"L":0, "M":0, "S":0, "XS":0}
+    def _process(self, capacity: int, stream: WeightStream) -> Solution:
+        num_bins = {"L": 1, "M": 1, "S": 1, "XS": 1} #each of the keys is a bin category, bins are divided among four categories
+        sol = {"L": [[]], "M": [[]], "S": [[]], "XS": [[]]}
+        bi = {"L": 0, "M": 0, "S": 0, "XS": 0}
         count_b2 = 0
 
         for w in stream:
@@ -104,7 +105,7 @@ class BestFit(Online):
 
 
 class WorstFit(Online):
-    
+
     def _process(self, capacity: int, stream: WeightStream) -> Solution:
         solution = [[]]
         num_bins = 1
@@ -124,10 +125,11 @@ class WorstFit(Online):
                 num_bins += 1
         return solution
 
+
 class OneFit(Online):
 
-    def _process(self, capacity:int, stream: WeightStream) -> Solution:
+    def _process(self, capacity: int, stream: WeightStream) -> Solution:
         solution = []
         for w in stream:
             solution.append([w])
-        return solution 
+        return solution

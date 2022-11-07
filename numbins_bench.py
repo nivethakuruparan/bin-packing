@@ -49,7 +49,7 @@ def run_bench(cases: list[str], algs: list, alg_type: str):
             elif alg_type == "Offline":
                 data = BinppReader(case).offline()
             delegation = alg()
-            num_bins = len(delegation((data[0],data[1])))
+            num_bins = len(delegation((data[0], data[1])))
             # num_bins = len(alg._process(alg, data[0], data[1]))
             result.append(num_bins)
         plot_results(name, alg_names, result)
@@ -64,7 +64,7 @@ def plot_results(case: str, alg_names: list[str], result: list[int]):
     bar_graph.set_ylabel('Number of Bins')
     bar_graph.set_xlabel('Algorithm Name')
     bar_graph.set_title(case)
-    sheet.set_size_inches(18,5)
+    sheet.set_size_inches(18, 5)
     matplot.show()
 
 
