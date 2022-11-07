@@ -55,32 +55,32 @@ class RefinedFirstFit(Online):
         cap = [0, (1/3 * capacity), (2/5 * capacity), (1/2 * capacity), capacity]
         m = 6
         category = ''
-        if (w>cap[3] and w<=cap[4]):
+        if (w > cap[3] and w <= cap[4]):
+            category = 'L'
+        elif (w > cap[2] and w <= cap[3]):
+            category = 'M'
+        elif (w > cap[1] and w <= cap[2]):
+            count_b2 += 1
+            if (count_b2 < m):
+                category = 'S'
+            else:
                 category = 'L'
-        elif (w>cap[2] and w<=cap[3]):
-                category = 'M'
-        elif (w>cap[1] and w<=cap[2]):
-                count_b2 += 1
-                if(count_b2 < m):
-                    category = 'S'
-                else:
-                    category = 'L'
-        elif (w>0 and w<=cap[1]):
-                category = 'XS'
+        elif (w > 0 and w <= cap[1]):
+            category = 'XS'
         return category, count_b2
 
     def _process(self, capacity: int, stream: WeightStream) -> Solution:
-        num_bins = {"L": 1, "M": 1, "S": 1, "XS": 1} #each of the keys is a bin category, bins are divided among four categories
+        num_bins = {"L": 1, "M": 1, "S": 1, "XS": 1}
         sol = {"L": [[]], "M": [[]], "S": [[]], "XS": [[]]}
         bi = {"L": 0, "M": 0, "S": 0, "XS": 0}
         count_b2 = 0
 
         for w in stream:
-            category,count_b2 = self._determine_category(w,capacity,count_b2)
-            sol[category], num_bins[category] = self._first_fit_helper(capacity, num_bins[category],w,sol[category])
-            
+            category, count_b2 = self._determine_category(w, capacity, count_b2)
+            sol[category], num_bins[category] = self._first_fit_helper(capacity, num_bins[category], w, sol[category])
+
         solution = sol["L"] + sol["M"] + sol["S"] + sol["XS"]
-        return solution 
+        return solution
 
 
 class BestFit(Online):
